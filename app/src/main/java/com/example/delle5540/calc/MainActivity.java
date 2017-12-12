@@ -1,9 +1,11 @@
 package com.example.delle5540.calc;
 
 import android.os.Bundle;
+import android.renderscript.Sampler;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
 import android.support.v7.widget.AppCompatEditText;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -15,8 +17,6 @@ public class MainActivity extends AppCompatActivity {
 
     String firstValue, operand, secondValue, result;
 
-    @BindView(R.id.tv_first_operand)
-    TextView tvFirst;
 
     @BindView(R.id.et_main_display)
     AppCompatEditText etDisplay;
@@ -63,11 +63,11 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.btn_main_multiple)
     AppCompatButton btnMultiple;
 
-    @BindView(R.id.btn_main_clr)
-    AppCompatButton btnClr;
+    @BindView(R.id.btn_main_clear)
+    AppCompatButton btnClear;
 
-    @BindView(R.id.btn_main_equal)
-    AppCompatButton btnEqual;
+    @BindView(R.id.btn_main_equals)
+    AppCompatButton btnEquals;
 
 
     @Override
@@ -76,146 +76,76 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        btnOne.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDisplay.setText(etDisplay.getText().toString() + "1");
-                etDisplay.setSelection(etDisplay.getText().length());
-            }
+        btnOne.setOnClickListener(view -> {
+            MainActivity.this.checkDisplay("1");
+            etDisplay.setText("1");
         });
-
-        btnTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDisplay.setText(etDisplay.getText().toString() + "2");
-                etDisplay.setSelection(etDisplay.getText().length());
-            }
+        btnTwo.setOnClickListener(view -> {
+            checkDisplay("2");
+            etDisplay.setText("2");
         });
-
-        btnThree.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDisplay.setText(etDisplay.getText().toString() + "3");
-                etDisplay.setSelection(etDisplay.getText().length());
-            }
+        btnThree.setOnClickListener(view -> {
+            checkDisplay("3");
+            etDisplay.setText("3");
         });
-        btnFour.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDisplay.setText(etDisplay.getText().toString() + "4");
-                etDisplay.setSelection(etDisplay.getText().length());
-            }
+        btnFour.setOnClickListener(view -> {
+            checkDisplay("4");
+            etDisplay.setText("4");
         });
-        btnFive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDisplay.setText(etDisplay.getText().toString() + "5");
-                etDisplay.setSelection(etDisplay.getText().length());
-            }
+        btnFive.setOnClickListener(view -> {
+            checkDisplay("5");
+            etDisplay.setText("5");
         });
-        btnSix.setOnClickListener( (View v) -> {
-            etDisplay.setText(etDisplay.getText().toString() + "6");
-            etDisplay.setSelection(etDisplay.getText().length());
+        btnSix.setOnClickListener(view -> {
+            checkDisplay("6");
+            etDisplay.setText("6");
         });
-        btnSeven.setOnClickListener( (View v) -> {
-            etDisplay.setText(etDisplay.getText().toString() + "7");
-            etDisplay.setSelection(etDisplay.getText().length());
+        btnSeven.setOnClickListener(view -> {
+            checkDisplay("7");
+            etDisplay.setText("7");
         });
-        btnEight.setOnClickListener( (View v) -> {
-            etDisplay.setText(etDisplay.getText().toString() + "8");
-            etDisplay.setSelection(etDisplay.getText().length());
+        btnEight.setOnClickListener(view -> {
+            checkDisplay("8");
+            etDisplay.setText("8");
         });
-        btnNine.setOnClickListener( (View v) -> {
-            etDisplay.setText(etDisplay.getText().toString() + "9");
-            etDisplay.setSelection(etDisplay.getText().length());
+        btnNine.setOnClickListener(view -> {
+            checkDisplay("9");
+            etDisplay.setText("9");
         });
-        btnZero.setOnClickListener( (View v) -> {
-            etDisplay.setText(etDisplay.getText().toString() + "0");
-            etDisplay.setSelection(etDisplay.getText().length());
+        btnZero.setOnClickListener(view -> {
+            checkDisplay("0");
+            etDisplay.setText("0");
         });
-        /* remove last character from the edit text field */
-        btnClr.setOnClickListener( (View v) -> {
-            int nLenght = etDisplay.getText().toString().length();
-            String contentOfEditText = etDisplay.getText().toString();
-            if(nLenght > 0) {
-                etDisplay.setText(contentOfEditText.substring(0, nLenght - 1));
-            } else {
-                firstValue = "";
-                operand = "";
-                tvFirst.setText("");
-            }
-        });
-        btnClr.setOnLongClickListener(new View.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                etDisplay.setText("");
-                firstValue = "";
-                operand = "";
-                tvFirst.setText("");
-                return true;
-            }
-        });
-
-        btnPlus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                whenAnyOperationButtomIsPressed( "+" );
-            }
-        });
-        btnMinus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                whenAnyOperationButtomIsPressed( "-" );
-            }
-        });
-        btnDivide.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                whenAnyOperationButtomIsPressed( "/" );
-            }
-        });
-        btnMultiple.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                whenAnyOperationButtomIsPressed( "*" );
-            }
-        });
-
-        btnEqual.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                /*Perform calculation only when all needed information was entered. */
-                if(!firstValue.isEmpty() &&
-                        !operand.isEmpty() &&
-                        !etDisplay.getText().toString().isEmpty()) {
-                    if( calc(firstValue, operand, etDisplay.getText().toString() )){
-                        etDisplay.setText(result);
-                        tvFirst.setText("");
-                        firstValue = "";
-                        operand = "";
-                    }
-                }
-            }
-        });
-        etDisplay.setKeyListener(null); /* Disable editing EditText field by using keyboard */
-    }
-
-    private void whenAnyOperationButtomIsPressed(String currentOperand )
-    {
-        if(!etDisplay.getText().toString().isEmpty()) {
-            firstValue = etDisplay.getText().toString();
-            tvFirst.setText(firstValue + "  " + currentOperand + "  ");
-            operand = currentOperand;
+        btnClear.setOnClickListener(view -> {
             etDisplay.setText("");
-        }
+        });
+        btnPlus.setOnClickListener(view -> {
+            etDisplay.setText("+");
+        });
+        btnMinus.setOnClickListener(view -> {
+            etDisplay.setText("-");
+        });
+        btnDivide.setOnClickListener(view -> {
+            etDisplay.setText("/");
+        });
+        btnMultiple.setOnClickListener(view -> {
+            etDisplay.setText("*");
+        });
+
+        btnClear.setOnClickListener(view -> {
+            etDisplay.setText("");
+        });
+
+        btnEquals.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                MainActivity.this.calc(firstValue, operand, secondValue);
+                etDisplay.setText(result);
+            }
+        });
     }
 
-    /* Listener for equal button */
-    /* -------------------------------------------------------------------- */
-    private boolean calc(String fv, String op, String sv )
-    {
-        boolean bRet = true;
-
+    private void calc(String fv, String op, String sv) {
         if (op.equals("+")) {
             result = String.valueOf(Integer.valueOf(fv) + Integer.valueOf(sv));
         } else if (op.equals("-")) {
@@ -223,55 +153,24 @@ public class MainActivity extends AppCompatActivity {
         } else if (op.equals("*")) {
             result = String.valueOf(Integer.valueOf(fv) * Integer.valueOf(sv));
         } else if (op.equals("/")) {
-            if(Integer.valueOf(sv) > 0) {
+            if(Integer.valueOf(sv) != 0 ) {
                 result = String.valueOf(Integer.valueOf(fv) / Integer.valueOf(sv));
-            }  else {
-                Toast.makeText(this, "Error: You cannot divide by 0", Toast.LENGTH_SHORT).show();
-                bRet = false;
+            } else {
+                Toast.makeText(this, "Error: cannot divide by zero!", Toast.LENGTH_SHORT).show();
+                result = "";
             }
         }
-        return bRet;
     }
-/*
-// SEVERAL EXAMPLES OF ADD OnClicLIstener
-/////////////////////////////////////////////////////////////////
-// ButterKnife
-    @OnClick(R.id.btn_main_two)
-    public void onClickTwo() {
-        Toast.makeText(MainActivity.this, "Two pressed", Toast.LENGTH_LONG).show();
-    }
-/////////////////////////////////////////////////////////////////
-// Lambda and separate onClick class
-    public View.OnClickListener onClick = view -> {
-        Toast.makeText(MainActivity.this, " view id " + view.getId(), Toast.LENGTH_LONG).show();
-    };
-    btnTwo.setOnClickListener(onClick);
-//////////////////////////////////////////////////
-// Lambda only
-    btnThree.setOnClickListener(v -> Toast.makeText(MainActivity.this, "Three pressed", Toast.LENGTH_LONG).show());
-//////////////////////////////////////////////////
-// Classic
-        btnTwo.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                etDisplay.setText(etDisplay.getText().toString() + "2");
-                etDisplay.setSelection(etDisplay.getText().length());
-            }
-        });
-*/
-//////// END of example onClickListener /////////////////////////////////////////////////////////
 
-    /* ----------- NOT USED!!! --------------------------------
     private void checkDisplay(String value) {
-        if(etDisplay.getText().toString().equals("-") ||
-                etDisplay.getText().toString().equals("+") ||
+        if (etDisplay.getText().toString().equals("-") ||
+             etDisplay.getText().toString().equals("+") ||
                 etDisplay.getText().toString().equals("*") ||
-                etDisplay.getText().toString().equals("/") ) {
+                etDisplay.getText().toString().equals("/")) {
             operand = etDisplay.getText().toString();
             secondValue = value;
         } else {
-            firstValue = etDisplay.getText().toString();
-        }
+            firstValue = value;
+        };
     }
-    -------------- NOT USED ------------------------------------*/
 }

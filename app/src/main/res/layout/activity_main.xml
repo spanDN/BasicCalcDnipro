@@ -12,14 +12,7 @@
     android:digits="01234567890."
     android:inputType="numberDecimal"
     android:gravity="right"
-    android:layout_below="@+id/tv_first_operand"
     android:cursorVisible="true"/>
- <TextView
-     android:layout_width="match_parent"
-     android:layout_height="wrap_content"
-     android:id="@+id/tv_first_operand"
-     android:gravity="right"/>
-
 
     <LinearLayout
         android:id="@+id/ll_main_container_plus"
@@ -114,7 +107,7 @@
     <android.support.v7.widget.AppCompatButton
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_main_equal"
+        android:id="@+id/btn_main_equals"
         android:text="@string/equal_button"
         android:layout_below="@+id/ll_main_container_multiply" />
     <LinearLayout
@@ -133,7 +126,7 @@
         <android.support.v7.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/btn_main_clr"
+            android:id="@+id/btn_main_clear"
             android:layout_weight="1"
             android:text="CLR" />
         <android.support.v7.widget.AppCompatButton
